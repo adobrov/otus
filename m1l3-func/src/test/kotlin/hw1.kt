@@ -1,4 +1,4 @@
-import kotlin.test.Ignore
+import kotlin.test.assertEquals
 import kotlin.test.Test
 
 /*
@@ -11,7 +11,6 @@ import kotlin.test.Test
 class HomeWork1Test {
 
     @Test
-    @Ignore
     fun mapListToNamesTest() {
         val input = listOf(
             mapOf(
@@ -32,7 +31,16 @@ class HomeWork1Test {
             "Петька",
             "Королев Сергей",
         )
-//        val res = mapListToNames(input)
-//        assertEquals(expected, res)
+        val res = mapListToNames(input)
+        assertEquals(expected, res)
     }
+}
+
+fun mapListToNames(input: List<Map<String, String>>): MutableList<String> {
+    val res = mutableListOf<String>()
+    for (elem in input) {
+        val f = listOfNotNull(elem["last"], elem["first"], elem["middle"]).joinToString(" ")
+        res.addLast(f)
+    }
+    return res
 }
