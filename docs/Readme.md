@@ -80,5 +80,26 @@
 4. Номер заявки
 5. Номер комментария
 
+# API
+
+## Описание сущности заявки (ticket)
+1. ID
+2. Subject
+3. Description
+4. Owner
+5. State: New/Progress/Finish
+6. CreationDate
+7. FinishDate
+8. Comment
+   1. ID
+   2. Author
+   3. CreationDate
+   4. Text
+
+## Функции (эндпониты)
+
+1. CRUDS (create, read, update, delete, search) для заявки (ticket)
+2. ticket.waits получение открытых заявок, в которых последнй комментарий не от ответственного    
+
 # Общая схема
 ![Схема](../imgs/trac-arch.png)
