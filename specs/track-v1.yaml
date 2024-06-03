@@ -1,0 +1,452 @@
+openapi: 3.0.3
+info:
+  title: "Track ${VERSION_APP}"
+  description: This is a place where sellers and buyers meat each other
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: ticket
+    description: Заявка
+paths:
+  /ticket/create:
+    post:
+      tags:
+        - ticket
+      summary: Create ticket
+      operationId: ticketCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketCreateResponse'
+  /ticket/read:
+    post:
+      tags:
+        - ticket
+      summary: Read ticket
+      operationId: ticketRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketReadResponse'
+  /ticket/update:
+    post:
+      tags:
+        - ticket
+      summary: Update ticket
+      operationId: ticketUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketUpdateResponse'
+  /ticket/delete:
+    post:
+      tags:
+        - ticket
+      summary: Delete ticket
+      operationId: ticketDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketDeleteResponse'
+  /ticket/search:
+    post:
+      tags:
+        - ticket
+      summary: Search ticket
+      operationId: ticketSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketSearchResponse'
+  /ticket/add:
+    post:
+      tags:
+        - ticket
+      summary: Add comment
+      operationId: addComment
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketAddCommentRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketAddCommentResponse'
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/TicketCreateRequest'
+          read: '#/components/schemas/TicketReadRequest'
+          update: '#/components/schemas/TicketUpdateRequest'
+          delete: '#/components/schemas/TicketDeleteRequest'
+          search: '#/components/schemas/TicketSearchRequest'
+          add: '#/components/schemas/TicketAddCommentRequest'
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/TicketCreateResponse'
+          read:   '#/components/schemas/TicketReadResponse'
+          update: '#/components/schemas/TicketUpdateResponse'
+          delete: '#/components/schemas/TicketDeleteResponse'
+          search: '#/components/schemas/TicketSearchResponse'
+          add: '#/components/schemas/TicketAddCommentResponse'
+
+    BaseTicket:
+      type: object
+      description: Базовый объект заявки
+      properties:
+        Subject:
+          type: string
+        Description:
+          type: string
+
+    BaseTicketParams:
+      allOf:
+        - type: object
+          description: Объект заявки с параметрами для редактирования
+        - $ref: '#/components/schemas/BaseTicket'
+        - properties:
+            Owner:
+              type: string
+            State:
+              $ref: '#/components/schemas/State'
+            FinishDate:
+              type: string
+              format: date-time
+
+
+    Comment:
+      type: object
+      description: Объект комментария
+      properties:
+        ID:
+          type: integer
+        Author:
+          type: string
+        CreationDate:
+          type: string
+          format: date-time
+        Text:
+          type: string
+
+    State:
+      type: string
+      description: Статус заявки
+      enum:
+        - New
+        - Progress
+        - Finish
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+#===========Request
+
+    TicketCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTicket'
+
+    TicketCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            ticket:
+              $ref: '#/components/schemas/TicketCreateObject'
+
+    TicketReadObject:
+      allOf:
+        - type: object
+        - properties:
+            ID:
+              type: integer
+
+    TicketReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            ticket:
+              $ref: '#/components/schemas/TicketReadObject'
+
+    TicketUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTicketParams'
+        - type: object
+        - properties:
+            ID:
+              type: integer
+            lock:
+              type: integer
+
+    TicketUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            ticket:
+              $ref: '#/components/schemas/TicketUpdateObject'
+
+    TicketDeleteObject:
+      allOf:
+        - type: object
+        - properties:
+            ID:
+              type: integer
+            lock:
+              type: integer
+
+    TicketDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            ticket:
+              $ref: '#/components/schemas/TicketDeleteObject'
+              
+    TicketSearchFilterObject:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Тема заявки для поиска
+
+
+    TicketSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            filter:
+              $ref: '#/components/schemas/TicketSearchFilterObject'
+
+    TicketAddCommentObject:
+      type: object
+      description: Добавление комментария
+      properties:
+        ID:
+          type: integer
+        Owner:
+          type: string
+        Author:
+          type: string
+        Text:
+          type: string
+        lock:
+          type: integer
+
+    TicketAddCommentRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TicketRequestDebug'
+        - type: object
+        - properties:
+            comment:
+              $ref: '#/components/schemas/TicketAddCommentObject'
+
+#===========Response
+
+    TicketResponseObject:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/BaseTicketParams'
+        - properties:
+            ID:
+              type: integer
+            CreationDate:
+              type: string
+              format: date-time
+            Comment:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+
+    TicketResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом заявки
+        - properties:
+            ticket:
+              $ref: '#/components/schemas/TicketResponseObject'
+
+    TicketResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных заявок
+        - properties:
+            tickets:
+              type: array
+              items:
+                $ref: '#/components/schemas/TicketResponseObject'
+
+    TicketCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TicketResponseSingle'
+
+    TicketReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TicketResponseSingle'
+
+    TicketUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TicketResponseSingle'
+
+    TicketDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TicketResponseSingle'
+
+    TicketSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TicketResponseMulti'
+
+    TicketAddCommentResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
+#===========Stubs
+
+    TicketRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    TicketRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/TicketDebug'
+
+    TicketDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/TicketRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/TicketRequestDebugStubs'
+
+    TicketRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - cannotDelete
+        - badSearchString
