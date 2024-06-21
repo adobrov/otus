@@ -12,3 +12,5 @@ rootProject.name = "ok-marketplace-202402"
 
 includeBuild("lessons")
 includeBuild("track")
+includeBuild("track-libs")
+

@@ -1,4 +1,4 @@
-rootProject.name = "track"
+rootProject.name = "track-libs"
 
 dependencyResolutionManagement {
     versionCatalogs {
@@ -24,10 +24,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-include(":track-api-v1")
-include(":track-api-v1-mappers")
-include(":track-common")
-include(":track-api-log")
-include(":track-libs")
+include(":track-lib-logging-common")
+//include(":ok-marketplace-lib-logging-kermit")
+//include(":ok-marketplace-lib-logging-logback")
+//include(":ok-marketplace-lib-logging-socket")
