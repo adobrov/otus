@@ -2,8 +2,8 @@ package ru.otus.otuskotlin.track.api.v1
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
-import com.otus.otuskotlin.track.api.v1.models.IRequest
-import com.otus.otuskotlin.track.api.v1.models.IResponse
+import ru.otus.otuskotlin.track.api.v1.models.IRequest
+import ru.otus.otuskotlin.track.api.v1.models.IResponse
 val apiV1Mapper = JsonMapper.builder().run {
     enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
     build()

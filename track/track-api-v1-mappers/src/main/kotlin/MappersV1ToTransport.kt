@@ -11,6 +11,15 @@ import ru.otus.otuskotlin.track.common.exceptions.UnknownTrackCommand
 import ru.otus.otuskotlin.track.common.models.*
 
 
+fun TrackContext.toTransportTicket(): IResponse = when (val cmd = command) {
+    TrackCommand.CREATE -> toTransportCreate()
+    TrackCommand.READ -> toTransportRead()
+    TrackCommand.UPDATE -> toTransportUpdate()
+    TrackCommand.DELETE -> toTransportDelete()
+    TrackCommand.SEARCH -> toTransportSearch()
+    else -> throw UnknownTrackCommand(cmd)
+}
+
 fun TrackContext.toTransportCreate() = TicketCreateResponse(
     result = operationState.toResult(),
     errors = errors.toTransportErrors(),
@@ -45,6 +54,12 @@ fun TrackContext.toTransportAdd() = TicketAddCommentResponse(
     result = operationState.toResult(),
     errors = errors.toTransportErrors(),
 )
+
+fun TrackContext.toTransportInit() = TicketInitResponse(
+    result = operationState.toResult(),
+    errors = errors.toTransportErrors(),
+)
+
 private fun TrackState.toResult(): State? = when (this) {
     TrackState.NEW -> State.NEW
     TrackState.PROGRESS -> State.PROGRESS
@@ -52,7 +67,7 @@ private fun TrackState.toResult(): State? = when (this) {
     TrackState.NONE -> null
 }
 private fun TrackTicket.toTransportTicket(): TicketResponseObject = TicketResponseObject(
-    ID = id.takeIf { it != TrackTicketId.NONE }?.asInt(),
+    id = id.takeIf { it != TrackTicketId.NONE }?.asInt(),
     subject = subject.takeIf { it.isNotBlank() },
     description = description.takeIf { it.isNotBlank() },
     owner = owner.takeIf { it != TrackOwnerId.NONE }?.asString(),

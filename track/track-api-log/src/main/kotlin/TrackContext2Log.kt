@@ -38,7 +38,7 @@ private fun TrackError.toLog() = ErrorLogModel(
 )
 
 private fun TrackTicket.toLog() = TicketLog(
-    id = id.takeIf { it != TrackTicketId.NONE }?.asString(),
+    id = id.takeIf { it != TrackTicketId.NONE }?.asInt().toString(),
 //    title = title.takeIf { it.isNotBlank() },
 //    description = description.takeIf { it.isNotBlank() },
 //    adType = adType.takeIf { it != MkplDealSide.NONE }?.name,

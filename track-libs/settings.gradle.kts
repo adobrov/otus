@@ -25,6 +25,4 @@ plugins {
 }
 
 include(":track-lib-logging-common")
-//include(":ok-marketplace-lib-logging-kermit")
-//include(":ok-marketplace-lib-logging-logback")
-//include(":ok-marketplace-lib-logging-socket")
+include(":track-lib-logging-logback")
