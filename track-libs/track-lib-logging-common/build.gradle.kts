@@ -1,7 +1,7 @@
-plugins {
-    id("build-jvm")
-}
-
+//plugins {
+//    id("build-kmp")
+//}
+//
 //kotlin {
 //    sourceSets {
 //        val commonMain by getting {
@@ -28,6 +28,10 @@ plugins {
 //        }
 //    }
 //}
+
+plugins {
+    id("build-jvm")
+}
 
 dependencies {
     implementation(kotlin("stdlib"))

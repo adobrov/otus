@@ -177,6 +177,7 @@ components:
           delete: '#/components/schemas/TicketDeleteResponse'
           search: '#/components/schemas/TicketSearchResponse'
           add: '#/components/schemas/TicketAddCommentResponse'
+          init: '#/components/schemas/TicketInitResponse'
 
     BaseTicket:
       type: object
@@ -261,7 +262,7 @@ components:
       allOf:
         - type: object
         - properties:
-            ID:
+            id:
               type: integer
 
     TicketReadRequest:
@@ -278,7 +279,7 @@ components:
         - $ref: '#/components/schemas/BaseTicketParams'
         - type: object
         - properties:
-            ID:
+            id:
               type: integer
             lock:
               type: integer
@@ -296,7 +297,7 @@ components:
       allOf:
         - type: object
         - properties:
-            ID:
+            id:
               type: integer
             lock:
               type: integer
@@ -332,7 +333,7 @@ components:
       type: object
       description: Добавление комментария
       properties:
-        ID:
+        id:
           type: integer
         Owner:
           type: string
@@ -354,12 +355,16 @@ components:
 
 #===========Response
 
+    TicketInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
     TicketResponseObject:
       allOf:
         - type: object
         - $ref: '#/components/schemas/BaseTicketParams'
         - properties:
-            ID:
+            id:
               type: integer
             CreationDate:
               type: string

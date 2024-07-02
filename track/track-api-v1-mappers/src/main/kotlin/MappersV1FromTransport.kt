@@ -9,6 +9,7 @@ import ru.otus.otuskotlin.track.common.NONE
 import ru.otus.otuskotlin.track.common.TrackContext
 import ru.otus.otuskotlin.track.common.models.*
 import ru.otus.otuskotlin.track.common.stubs.TrackStubs
+import ru.otus.otuskotlin.track.mappers.v1.exceptions.UnknownRequestClass
 
 private fun Int?.toTicketId() = this?.let { TrackTicketId(it) } ?: TrackTicketId.NONE
 private fun Int?.toTicketWithId() = TrackTicket(id = this.toTicketId())
@@ -16,6 +17,15 @@ private fun Int?.toTicketLock() = this?.let { TrackTicketLock(it) } ?: TrackTick
 private fun String?.toOwnerId() = this?.let { TrackOwnerId(it) } ?: TrackOwnerId.NONE
 private fun String?.toInstant() = this?.let { LocalDateTime.parse(it).toInstant(TimeZone.UTC) } ?: Instant.NONE
 private fun String?.toStringSafe() = this ?: ""
+
+fun TrackContext.fromTransport(request: IRequest) = when (request) {
+    is TicketCreateRequest -> fromTransport(request)
+    is TicketReadRequest -> fromTransport(request)
+    is TicketUpdateRequest -> fromTransport(request)
+    is TicketDeleteRequest -> fromTransport(request)
+    is TicketSearchRequest -> fromTransport(request)
+    else -> throw UnknownRequestClass(request.javaClass)
+}
 
 private fun getCurrentTime(): Instant {
     val currentMoment: Instant = Clock.System.now()
@@ -64,7 +74,7 @@ fun TrackContext.fromTransport(request: TicketReadRequest) {
 }
 
 private fun TicketReadObject?.toInternal(): TrackTicket = if (this != null) {
-    TrackTicket(id = ID.toTicketId())
+    TrackTicket(id = id.toTicketId())
 } else {
     TrackTicket()
 }
@@ -85,7 +95,7 @@ fun TrackContext.fromTransport(request: TicketDeleteRequest) {
 
 private fun TicketDeleteObject?.toInternal(): TrackTicket = if (this != null) {
     TrackTicket(
-        id = ID.toTicketId(),
+        id = id.toTicketId(),
         lock = lock.toTicketLock(),
     )
 } else {
@@ -106,7 +116,7 @@ fun TrackContext.fromTransport(request: TicketAddCommentRequest) {
     stubCase = request.debug.transportToStubCase()
 
     newComment = TrackTicketComment(
-        ticketId = request.comment?.ID.toTicketId(),
+        ticketId = request.comment?.id.toTicketId(),
         author = request.comment?.author.toStringSafe(),
         creationDate = getCurrentTime(),
         text = request.comment?.text.toStringSafe(),
@@ -123,7 +133,7 @@ private fun TicketCreateObject.toInternal(): TrackTicket = TrackTicket(
 )
 
 private fun TicketUpdateObject.toInternal(): TrackTicket = TrackTicket(
-    id = this.ID.toTicketId(),
+    id = this.id.toTicketId(),
     description = this.description ?: "",
     owner = this.owner.toOwnerId(),
     state = this.state.toState(),

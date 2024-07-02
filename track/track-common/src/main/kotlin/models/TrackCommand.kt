@@ -8,4 +8,6 @@ enum class TrackCommand {
     DELETE,
     SEARCH,
     ADD,
+    INIT,
+    FINISH,
 }

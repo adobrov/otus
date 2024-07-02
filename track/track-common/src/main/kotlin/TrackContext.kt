@@ -3,6 +3,7 @@ package ru.otus.otuskotlin.track.common
 import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.track.common.models.*
 import ru.otus.otuskotlin.track.common.stubs.TrackStubs
+import ru.otus.otuskotlin.track.common.ws.ITrackWsSession
 
 data class TrackContext(
     var command: TrackCommand = TrackCommand.NONE,
@@ -10,6 +11,8 @@ data class TrackContext(
 
     var workMode: TrackWorkMode = TrackWorkMode.PROD,
     var stubCase: TrackStubs = TrackStubs.NONE,
+
+    var wsSession: ITrackWsSession = ITrackWsSession.NONE,
 
     var requestId: TrackRequestId = TrackRequestId.NONE,
     var timeStart: Instant = Instant.NONE,
