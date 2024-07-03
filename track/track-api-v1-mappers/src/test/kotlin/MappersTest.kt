@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.mappers.v1
+package ru.otus.otuskotlin.track.mappers.v1
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime

@@ -1,6 +1,7 @@
 package ru.otus.otuskotlin.track.api.v1
 
 import ru.otus.otuskotlin.track.api.v1.models.*
+import ru.otus.otuskotlin.track.api.v1.models.TicketInitResponse
 import javax.security.auth.Subject
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -11,6 +12,7 @@ class ResponseV1SerializationTest {
         ticket = TicketResponseObject(
             subject = "ticket title",
             description = "ticket description",
+            id = 23,
         )
     )
 
