@@ -16,6 +16,10 @@ data class TrackTicket(
 ) {
     fun isEmpty() = this == NONE
 
+    fun deepCopy(): TrackTicket = copy(
+        comments = comments.toMutableList(),
+    )
+
     companion object {
         private val NONE = TrackTicket()
     }
