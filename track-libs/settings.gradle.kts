@@ -26,3 +26,4 @@ plugins {
 
 include(":track-lib-logging-common")
 include(":track-lib-logging-logback")
+include(":track-lib-cor")

@@ -10,9 +10,9 @@ object TrackTicketStub {
     fun get(): TrackTicket = SIMPLE_TICKET1.copy()
 
     fun prepareResult(block: TrackTicket.() -> Unit): TrackTicket = get().apply(block)
-    fun prepareSearchList() = mutableListOf(
-        TrackTicket(TrackTicketId(666)),
-        TrackTicket(TrackTicketId(777)),
+    fun prepareSearchList(filter: String) = mutableListOf(
+        TrackTicket(TrackTicketId(666), subject = "Заявка", description = "Заявка"),
+        TrackTicket(TrackTicketId(777), subject = "Заявка2", description = "Заявка2"),
 
     )
 }

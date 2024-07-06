@@ -9,6 +9,7 @@ data class TrackContext(
     var command: TrackCommand = TrackCommand.NONE,
     val errors: MutableList<TrackError> = mutableListOf(),
 
+    var corSettings: TrackCorSettings = TrackCorSettings(),
     var workMode: TrackWorkMode = TrackWorkMode.PROD,
     var stubCase: TrackStubs = TrackStubs.NONE,
 
@@ -21,6 +22,13 @@ data class TrackContext(
 
     var ticketResponse: TrackTicket = TrackTicket(),
     var ticketsResponse: MutableList<TrackTicket> = mutableListOf(),
+
+
+    var ticketValidating: TrackTicket = TrackTicket(),
+    var ticketFilterValidating: TrackTicketFilter = TrackTicketFilter(),
+
+    var ticketValidated: TrackTicket = TrackTicket(),
+    var ticketFilterValidated: TrackTicketFilter = TrackTicketFilter(),
 
     var newComment: TrackTicketComment = TrackTicketComment.NONE,
     var operationState: TrackOperationState = TrackOperationState.NONE,
