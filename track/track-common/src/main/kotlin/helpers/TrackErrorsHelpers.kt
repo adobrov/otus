@@ -19,11 +19,18 @@ fun Throwable.asTrackError(
 )
 
 inline fun TrackContext.addError(vararg error: TrackError) = errors.addAll(error)
+inline fun TrackContext.addErrors(error: Collection<TrackError>) = errors.addAll(error)
 
 inline fun TrackContext.fail(error: TrackError) {
     addError(error)
     operationState = TrackOperationState.FAILING
 }
+
+inline fun TrackContext.fail(errors: Collection<TrackError>) {
+    addErrors(errors)
+    operationState = TrackOperationState.FAILING
+}
+
 
 inline fun errorValidation(
     field: String,
@@ -40,4 +47,16 @@ inline fun errorValidation(
     group = "validation",
     message = "Validation error for field $field: $description",
     level = level,
+)
+
+inline fun errorSystem(
+    violationCode: String,
+    level: LogLevel = LogLevel.ERROR,
+    e: Throwable,
+) = TrackError(
+    code = "system-$violationCode",
+    group = "system",
+    message = "System error occurred. Our stuff has been informed, please retry later",
+    level = level,
+    exception = e,
 )

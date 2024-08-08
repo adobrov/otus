@@ -55,6 +55,9 @@ dependencies {
     implementation(project(":track-api-v1"))
     implementation(project(":track-api-v1-mappers"))
 
+    implementation(project(":track-repo-stubs"))
+    implementation(project(":track-repo-inmemory"))
+
     implementation(project(":track-api-log"))
     implementation("ru.otus.otuskotlin.track.libs:track-lib-logging-common")
     implementation("ru.otus.otuskotlin.track.libs:track-lib-logging-logback")
@@ -62,6 +65,7 @@ dependencies {
     implementation(kotlin("test-common"))
     implementation(kotlin("test-annotations-common"))
     testImplementation(kotlin("test-junit"))
+    testImplementation(project(":track-repo-common"))
 }
 
 tasks {

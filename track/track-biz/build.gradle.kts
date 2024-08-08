@@ -20,4 +20,7 @@ dependencies {
     api("ru.otus.otuskotlin.track.libs:track-lib-cor")
 
     testImplementation(kotlin("test-junit"))
+
+    testImplementation(project(":track-repo-test"))
+    testImplementation(project(":track-repo-inmemory"))
 }
