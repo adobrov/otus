@@ -7,6 +7,7 @@ data class TicketEntity(
     val subject: String? = null,
     val description: String? = null,
     val owner: String? = null,
+    val state: TrackState? = null,
     val lock: Int? = null,
 ) {
     constructor(model: TrackTicket): this(
@@ -14,6 +15,7 @@ data class TicketEntity(
         subject = model.subject.takeIf { it.isNotBlank() },
         description = model.description.takeIf { it.isNotBlank() },
         owner = model.owner.asString().takeIf { it.isNotBlank() },
+        state = TrackState.PROGRESS,
         lock = model.lock.asInt()
     )
 
@@ -22,6 +24,7 @@ data class TicketEntity(
         subject = subject?: "",
         description = description?: "",
         owner = owner?.let { TrackOwnerId(it) }?: TrackOwnerId.NONE,
+        state = state?.let { TrackState.PROGRESS }?: TrackState.NONE,
         lock = lock?.let { TrackTicketLock(it) } ?: TrackTicketLock.NONE,
     )
 }

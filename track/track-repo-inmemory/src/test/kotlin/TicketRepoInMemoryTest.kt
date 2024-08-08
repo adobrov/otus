@@ -1,6 +1,8 @@
+package ru.otus.otuskotlin.track.repo.inmemory
+
 import ru.otus.otuskotlin.track.backend.repo.tests.*
 import ru.otus.otuskotlin.track.repo.common.TicketRepoInitialized
-import ru.otus.otuskotlin.track.repo.inmemory.TicketRepoInMemory
+//import ru.otus.otuskotlin.track.repo.inmemory.TicketRepoInMemory
 
 class TicketRepoInMemoryCreateTest : RepoTicketCreateTest() {
     override val repo = TicketRepoInitialized(
@@ -30,7 +32,7 @@ class TicketRepoInMemorySearchTest : RepoTicketSearchTest() {
     )
 }
 
-class AdRepoInMemoryUpdateTest : RepoTicketUpdateTest() {
+class TicketRepoInMemoryUpdateTest : RepoTicketUpdateTest() {
     override val repo = TicketRepoInitialized(
         TicketRepoInMemory(),
         initObjects = initObjects,
