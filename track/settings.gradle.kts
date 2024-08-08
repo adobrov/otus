@@ -35,6 +35,11 @@ include(":track-app-ktor")
 
 include(":track-common")
 include(":track-app-common")
+include(":track-repo-common")
+include(":track-repo-inmemory")
+include(":track-repo-stubs")
+include(":track-repo-test")
+include(":track-repo-postgres")
 include(":track-biz")
 include(":track-stubs")
 

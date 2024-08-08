@@ -2,6 +2,7 @@ package ru.otus.otuskotlin.track.common
 
 import kotlinx.datetime.Instant
 import ru.otus.otuskotlin.track.common.models.*
+import ru.otus.otuskotlin.track.common.repo.IRepoTicket
 import ru.otus.otuskotlin.track.common.stubs.TrackStubs
 import ru.otus.otuskotlin.track.common.ws.ITrackWsSession
 
@@ -29,6 +30,12 @@ data class TrackContext(
 
     var ticketValidated: TrackTicket = TrackTicket(),
     var ticketFilterValidated: TrackTicketFilter = TrackTicketFilter(),
+
+    var ticketRepo: IRepoTicket = IRepoTicket.NONE,
+    var ticketRepoRead: TrackTicket = TrackTicket(), // То, что прочитали из репозитория
+    var ticketRepoPrepare: TrackTicket = TrackTicket(), // То, что готовим для сохранения в БД
+    var ticketRepoDone: TrackTicket = TrackTicket(),  // Результат, полученный из БД
+    var ticketsRepoDone: MutableList<TrackTicket> = mutableListOf(),
 
     var newComment: TrackTicketComment = TrackTicketComment.NONE,
     var operationState: TrackOperationState = TrackOperationState.NONE,
