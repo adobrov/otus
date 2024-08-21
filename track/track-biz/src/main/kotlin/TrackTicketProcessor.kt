@@ -5,13 +5,16 @@ import ru.otus.otuskotlin.track.biz.general.operation
 import ru.otus.otuskotlin.track.biz.general.stubs
 import ru.otus.otuskotlin.track.biz.stubs.*
 import ru.otus.otuskotlin.track.biz.validation.*
+import ru.otus.otuskotlin.track.biz.repo.*
 import ru.otus.otuskotlin.track.common.TrackContext
 import ru.otus.otuskotlin.track.common.TrackCorSettings
 import ru.otus.otuskotlin.track.common.models.TrackTicketId
 import ru.otus.otuskotlin.track.common.models.TrackTicketLock
 import ru.otus.otuskotlin.track.common.models.TrackCommand
+import ru.otus.otuskotlin.track.common.models.TrackOperationState
 import ru.otus.otuskotlin.track.cor.rootChain
 import ru.otus.otuskotlin.track.cor.worker
+import ru.otus.otuskotlin.track.cor.chain
 
 class TrackTicketProcessor(
     private val corSettings: TrackCorSettings = TrackCorSettings.NONE
@@ -20,6 +23,7 @@ class TrackTicketProcessor(
 
     private val businessChain = rootChain<TrackContext> {
         initStatus("Инициализация статуса")
+        initRepo("Инициализация репозитория")
 
         operation("Создание заявки", TrackCommand.CREATE) {
             stubs("Обработка стабов") {
@@ -30,7 +34,7 @@ class TrackTicketProcessor(
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
             validation {
-                worker("Копируем поля в adValidating") { ticketValidating = ticketRequest.deepCopy() }
+                worker("Копируем поля в ticketValidating") { ticketValidating = ticketRequest.deepCopy() }
                 worker("Очистка id") { ticketValidating.id = TrackTicketId.NONE }
                 worker("Очистка заголовка") { ticketValidating.subject = ticketValidating.subject.trim() }
                 worker("Очистка описания") { ticketValidating.description = ticketValidating.description.trim() }
@@ -38,9 +42,14 @@ class TrackTicketProcessor(
                 validateSubjectHasContent("Проверка символов")
                 validateDescriptionNotEmpty("Проверка, что описание не пусто")
                 validateDescriptionHasContent("Проверка символов")
-
                 finishTicketValidation("Завершение проверок")
             }
+            chain {
+                title = "Логика сохранения"
+                repoPrepareCreate("Подготовка объекта для сохранения")
+                repoCreate("Создание объявления в БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Получить объявление", TrackCommand.READ) {
             stubs("Обработка стабов") {
@@ -56,6 +65,16 @@ class TrackTicketProcessor(
 
                 finishTicketValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика чтения"
+                repoRead("Чтение заявки из БД")
+                worker {
+                    title = "Подготовка ответа для Read"
+                    on { operationState == TrackOperationState.RUNNING }
+                    handle { ticketRepoDone = ticketRepoRead }
+                }
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Изменить объявление", TrackCommand.UPDATE) {
             stubs("Обработка стабов") {
@@ -81,6 +100,13 @@ class TrackTicketProcessor(
 
                 finishTicketValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика сохранения"
+                repoRead("Чтение заявки из БД")
+                repoPrepareUpdate("Подготовка объекта для обновления")
+                repoUpdate("Обновление заявки в БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Удалить объявление", TrackCommand.DELETE) {
             stubs("Обработка стабов") {
@@ -99,6 +125,13 @@ class TrackTicketProcessor(
                 validateLockNotEmpty("Проверка на непустой lock")
                 finishTicketValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика удаления"
+                repoRead("Чтение заявки из БД")
+                repoPrepareDelete("Подготовка объекта для удаления")
+                repoDelete("Удаление заявки из БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Поиск объявлений", TrackCommand.SEARCH) {
             stubs("Обработка стабов") {
@@ -113,6 +146,8 @@ class TrackTicketProcessor(
 
                 finishTicketFilterValidation("Успешное завершение процедуры валидации")
             }
+            repoSearch("Поиск заявки в БД по фильтру")
+            prepareResult("Подготовка ответа")
         }
     }.build()
 }
