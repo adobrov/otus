@@ -7,7 +7,7 @@ ktor:
     - resources
   application:
     modules:
-      - "ru.otus.otuskotlin.track.app.ktor.ApplicationKt.moduleJvm"
+      - "ru.otus.otuskotlin.track.app.ktor.ApplicationJvmKt.moduleJvm"
     urls:
       - "http://127.0.0.1:8080/v1"
       - "http://0.0.0.0:8080/v1"

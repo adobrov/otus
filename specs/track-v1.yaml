@@ -183,10 +183,18 @@ components:
       type: object
       description: Базовый объект заявки
       properties:
+        id:
+          type: integer
         Subject:
           type: string
         Description:
           type: string
+        Owner:
+          type: string
+        Comment:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
 
     BaseTicketParams:
       allOf:
@@ -194,8 +202,6 @@ components:
           description: Объект заявки с параметрами для редактирования
         - $ref: '#/components/schemas/BaseTicket'
         - properties:
-            Owner:
-              type: string
             State:
               $ref: '#/components/schemas/State'
             FinishDate:
@@ -216,6 +222,8 @@ components:
           format: date-time
         Text:
           type: string
+        TicketId:
+          type: integer
 
     State:
       type: string
@@ -364,8 +372,6 @@ components:
         - type: object
         - $ref: '#/components/schemas/BaseTicketParams'
         - properties:
-            id:
-              type: integer
             CreationDate:
               type: string
               format: date-time

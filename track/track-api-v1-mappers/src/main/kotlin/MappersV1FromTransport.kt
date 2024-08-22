@@ -17,6 +17,22 @@ private fun Int?.toTicketLock() = this?.let { TrackTicketLock(it) } ?: TrackTick
 private fun String?.toOwnerId() = this?.let { TrackOwnerId(it) } ?: TrackOwnerId.NONE
 private fun String?.toInstant() = this?.let { LocalDateTime.parse(it).toInstant(TimeZone.UTC) } ?: Instant.NONE
 private fun String?.toStringSafe() = this ?: ""
+private fun List<Comment>.toComments(ticketId: TrackTicketId) = this.let {
+    val res = mutableListOf<TrackTicketComment>()
+    for (c in this) {
+        val id = c.ID ?: 0
+        val author = c.author ?: ""
+        var cd = c.creationDate.toInstant()
+        if (c.creationDate == null) {
+            cd = getCurrentTime()
+        }
+        val txt = c.text ?: ""
+        res.addLast(
+            TrackTicketComment(id, ticketId, author, cd, txt)
+        )
+    }
+    res
+}
 
 fun TrackContext.fromTransport(request: IRequest) = when (request) {
     is TicketCreateRequest -> fromTransport(request)
@@ -129,7 +145,9 @@ private fun TicketSearchFilterObject?.toInternal(): TrackTicketFilter = TrackTic
 private fun TicketCreateObject.toInternal(): TrackTicket = TrackTicket(
     subject = this.subject ?: "",
     description = this.description ?: "",
-    creationDate = getCurrentTime()
+    owner = this.owner.toOwnerId(),
+    comments = this.comment?.let {it.toComments(this.id.toTicketId())} ?: mutableListOf(),
+    creationDate = getCurrentTime(),
 )
 
 private fun TicketUpdateObject.toInternal(): TrackTicket = TrackTicket(

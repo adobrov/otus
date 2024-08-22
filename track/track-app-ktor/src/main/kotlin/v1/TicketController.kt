@@ -24,4 +24,3 @@ suspend fun ApplicationCall.deleteTicket(appSettings: TrackAppSettings) =
 val clSearch: KClass<*> = ApplicationCall::searchTicket::class
 suspend fun ApplicationCall.searchTicket(appSettings: TrackAppSettings) =
     processV1<TicketSearchRequest, TicketSearchResponse>(appSettings, clSearch, "search")
-

@@ -1,6 +1,6 @@
 package ru.otus.otuskotlin.track.app.ktor.plugins
 
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
 import ru.otus.otuskotlin.track.app.ktor.TrackAppSettings
 import ru.otus.otuskotlin.track.biz.TrackTicketProcessor
 import ru.otus.otuskotlin.track.common.TrackCorSettings

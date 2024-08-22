@@ -15,6 +15,7 @@ class TicketCreateStubTest {
     val id = TrackTicketId(666)
     val subject = "title 666"
     val description = "desc 666"
+    val owner = "user-1"
 
     @Test
     fun create() = runTest {
@@ -28,12 +29,14 @@ class TicketCreateStubTest {
                 id = id,
                 subject = subject,
                 description = description,
+                owner = TrackOwnerId("own"),
             ),
         )
         processor.exec(ctx)
         assertEquals(TrackTicketStub.get().id, ctx.ticketResponse.id)
         assertEquals(subject, ctx.ticketResponse.subject)
         assertEquals(description, ctx.ticketResponse.description)
+        assertEquals(owner, ctx.ticketResponse.owner.asString())
     }
 
     @Test

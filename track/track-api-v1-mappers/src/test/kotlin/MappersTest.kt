@@ -25,6 +25,7 @@ class MappersTest {
             ticket = TicketCreateObject(
                 subject = "subject",
                 description = "desc",
+                owner = "owner1",
             ),
         )
 
@@ -48,6 +49,7 @@ class MappersTest {
         assertEquals(TrackStubs.SUCCESS, context.stubCase)
         assertEquals(TrackWorkMode.STUB, context.workMode)
         assertEquals("subject", context.ticketRequest.subject)
+        assertEquals(TrackOwnerId("owner1"), context.ticketRequest.owner)
         assertEquals("text", context.newComment.text)
     }
 
@@ -60,6 +62,7 @@ class MappersTest {
             ticketResponse = TrackTicket(
                 subject = "subject",
                 description = "desc",
+                owner = TrackOwnerId("owner2"),
                 creationDate = LocalDateTime.parse("2024-01-01T12:15:16").toInstant(TimeZone.UTC),
                 comments = mutableListOf(
                     TrackTicketComment(
@@ -84,6 +87,7 @@ class MappersTest {
 
         assertEquals("subject", req.ticket?.subject)
         assertEquals("desc", req.ticket?.description)
+        assertEquals("owner2", req.ticket?.owner)
         assertEquals("2024-01-01T12:15:16Z", req.ticket?.creationDate)
         assertEquals("text", req.ticket?.comment?.get(0)?.text)
         assertEquals("author", req.ticket?.comment?.get(0)?.author)

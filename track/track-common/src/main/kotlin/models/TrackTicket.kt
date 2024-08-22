@@ -8,7 +8,7 @@ data class TrackTicket(
     var subject: String = "",
     var description: String = "",
     var owner: TrackOwnerId = TrackOwnerId.NONE,
-    var state: TrackState = TrackState.NONE,
+    var state: TrackState = TrackState.NEW,
     var creationDate: Instant = Instant.NONE,
     var finishDate: Instant = Instant.NONE,
     var lock: TrackTicketLock = TrackTicketLock.NONE,

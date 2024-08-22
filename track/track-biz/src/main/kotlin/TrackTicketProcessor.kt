@@ -141,7 +141,7 @@ class TrackTicketProcessor(
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
             validation {
-                worker("Копируем поля в adFilterValidating") { ticketFilterValidating = ticketFilterRequest.deepCopy() }
+                worker("Копируем поля в ticketFilterValidating") { ticketFilterValidating = ticketFilterRequest.deepCopy() }
                 validateSearchStringLength("Валидация длины строки поиска в фильтре")
 
                 finishTicketFilterValidation("Успешное завершение процедуры валидации")

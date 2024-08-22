@@ -5,10 +5,9 @@ import io.ktor.plugin.features.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
 
 plugins {
-    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlinx.serialization) apply false
     id("build-jvm")
     alias(libs.plugins.ktor)
-    //alias(libs.plugins.muschko.remote)
 }
 
 application {

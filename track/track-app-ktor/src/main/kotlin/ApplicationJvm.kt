@@ -17,7 +17,7 @@ import ru.otus.otuskotlin.track.api.v1.apiV1Mapper
 import ru.otus.otuskotlin.track.app.ktor.v1.v1Ticket
 import ru.otus.otuskotlin.track.app.ktor.plugins.initAppSettings
 import ru.otus.otuskotlin.track.app.ktor.v1.wsHandlerV1
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
 
 
 @Suppress("unused") // Referenced in application.conf

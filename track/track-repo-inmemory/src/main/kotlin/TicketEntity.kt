@@ -9,6 +9,7 @@ data class TicketEntity(
     val owner: String? = null,
     val state: TrackState? = null,
     val lock: Int? = null,
+    val comments: MutableList<TrackTicketComment> = mutableListOf(),
 ) {
     constructor(model: TrackTicket): this(
         id = model.id.asInt(),
@@ -16,7 +17,8 @@ data class TicketEntity(
         description = model.description.takeIf { it.isNotBlank() },
         owner = model.owner.asString().takeIf { it.isNotBlank() },
         state = TrackState.PROGRESS,
-        lock = model.lock.asInt()
+        lock = model.lock.asInt(),
+        comments = model.comments
     )
 
     fun toInternal() = TrackTicket(
@@ -26,5 +28,6 @@ data class TicketEntity(
         owner = owner?.let { TrackOwnerId(it) }?: TrackOwnerId.NONE,
         state = state?.let { TrackState.PROGRESS }?: TrackState.NONE,
         lock = lock?.let { TrackTicketLock(it) } ?: TrackTicketLock.NONE,
+        comments = comments,
     )
 }

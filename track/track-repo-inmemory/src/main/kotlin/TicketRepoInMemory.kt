@@ -1,10 +1,8 @@
 package ru.otus.otuskotlin.track.repo.inmemory
 
-import com.benasher44.uuid.uuid4
 import io.github.reactivecircus.cache4k.Cache
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.otus.otuskotlin.track.common.helpers.errorSystem
 import ru.otus.otuskotlin.track.common.models.*
 import ru.otus.otuskotlin.track.common.repo.*
 import ru.otus.otuskotlin.track.repo.common.IRepoTicketInitializable
@@ -14,14 +12,14 @@ import kotlin.time.Duration.Companion.minutes
 class TicketRepoInMemory(
     ttl: Duration = 2.minutes,
     val randomUuid: () -> Int = { (0..10000).random() },
-) : TicketRepoBase(), IRepoTicket, IRepoTicketInitializable {
+) : TicketRepoBase(), IRepoTicketInitializable {
 
     private val mutex: Mutex = Mutex()
     private val cache = Cache.Builder<Int, TicketEntity>()
         .expireAfterWrite(ttl)
         .build()
 
-    override fun save(ads: Collection<TrackTicket>) = ads.map { ticket ->
+    override fun save(tickets: Collection<TrackTicket>) = tickets.map { ticket ->
         val entity = TicketEntity(ticket)
         require(entity.id != null)
         cache.put(entity.id, entity)
@@ -30,12 +28,12 @@ class TicketRepoInMemory(
 
     override suspend fun createTicket(rq: DbTicketRequest): IDbTicketResponse = tryTicketMethod {
         val key = randomUuid()
-        val ad = rq.ticket.copy(id = TrackTicketId(key))
-        val entity = TicketEntity(ad)
+        val ticket = rq.ticket.copy(id = TrackTicketId(key))
+        val entity = TicketEntity(ticket)
         mutex.withLock {
             cache.put(key, entity)
         }
-        DbTicketResponseOk(ad)
+        DbTicketResponseOk(ticket)
     }
 
     override suspend fun readTicket(rq: DbTicketIdRequest): IDbTicketResponse = tryTicketMethod {

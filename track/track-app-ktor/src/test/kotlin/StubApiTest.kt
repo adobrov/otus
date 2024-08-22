@@ -24,6 +24,7 @@ class StubApiTest {
             ticket = TicketCreateObject(
                 subject = "subj",
                 description = "descr",
+                owner = "own",
             ),
             debug = TicketDebug(
                 mode = TicketRequestDebugMode.STUB,
@@ -33,7 +34,8 @@ class StubApiTest {
     ) { response ->
         val responseObj = response.body<TicketCreateResponse>()
         assertEquals(200, response.status.value)
-        assertEquals("Заявка", responseObj.ticket?.subject)
+        assertEquals("subj", responseObj.ticket?.subject)
+        assertEquals("user-1", responseObj.ticket?.owner)
     }
 
     @Test
@@ -116,7 +118,7 @@ class StubApiTest {
         request: IRequest,
         function: suspend (HttpResponse) -> Unit,
     ): Unit = testApplication {
-        application { moduleJvm(TrackAppSettings(corSettings = TrackCorSettings())) }
+        //application { moduleJvm(TrackAppSettings(corSettings = TrackCorSettings())) }
         val client = createClient {
             install(ContentNegotiation) {
                 jackson {

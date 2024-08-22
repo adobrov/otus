@@ -74,18 +74,19 @@ private fun TrackTicket.toTransportTicket(): TicketResponseObject = TicketRespon
     state = state.toResult(),
     finishDate = finishDate.takeIf { it != Instant.NONE }?.toString(),
     creationDate = creationDate.takeIf { it != Instant.NONE }?.toString(),
-    comment = comments.toTransportTicketComment(),
+    comment = comments.toTransportTicketComment(id),
 )
 
-private fun TrackTicketComment.toTransportTicket(): Comment = Comment(
+private fun TrackTicketComment.toTransportTicket(tid: TrackTicketId): Comment = Comment(
     ID = id,
+    ticketId = tid.takeIf { it != TrackTicketId.NONE }?.asInt(),
     author = author,
     creationDate = creationDate.takeIf { it != Instant.NONE }?.toString(),
     text = text
 )
 
-private fun List<TrackTicketComment>.toTransportTicketComment(): List<Comment>? = this
-    .map { it.toTransportTicket() }
+private fun List<TrackTicketComment>.toTransportTicketComment(id: TrackTicketId): List<Comment>? = this
+    .map { it.toTransportTicket(id) }
     .toList()
     .takeIf { it.isNotEmpty() }
 
